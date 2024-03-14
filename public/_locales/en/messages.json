@@ -1,0 +1,10 @@
+{
+  "extensionDescription": {
+    "description": "Extension description",
+    "message": "An extension support $PIXELS.xyz"
+  },
+  "extensionName": {
+    "description": "Extension name",
+    "message": "$PIXELS Assistant"
+  }
+}
