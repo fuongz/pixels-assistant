@@ -13,9 +13,7 @@ const Popup = () => {
       className="App"
       style={{
         backgroundColor: theme === 'light' ? '#fff' : '#000',
-      }}>
-      <h1>Socket</h1>
-    </div>
+      }}></div>
   );
 };
 

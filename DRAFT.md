@@ -1,35 +1,40 @@
 # Draft handler
 
 
-## 1. PixelsData.xyz - Crawl items
+## 1. pixels.tips - Crawl items
 ```javascript
-[...document.querySelectorAll("#tablepress-cooking-stove > tbody > tr")].map((e) => {
-    var tds = e.querySelectorAll("td")
-
-    var icon = tds[0].querySelector("img").getAttribute("src")
-    var name = tds[1].textContent
-    var level_required = tds[2].textContent
-    var repcipe = tds[3].textContent
-    // var price = tds[4].textContent
-    var time = tds[4].textContent
-    var xp_gain = tds[5].textContent
-    var energy_use = tds[6].textContent
-    // var return_value = tds[8].textContent
-    var eat_for_energy = tds[7].textContent
-    var notes = tds[8].textContent
-    
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+let tables = document.querySelectorAll("div[data-prefix]")
+let item_arr = [...tables].map((table) => {
+    let rows = table.querySelectorAll("table > tbody > tr")
+    let items = [...rows].map((item) => {
+        let tds = item.querySelectorAll("td")
+        let dataset = [...tds].map((td) => {
+            let hasSprite = td.querySelector("div[title].item-sprite")
+            let hasIcon = td.querySelector("img")
+            let itemKey = td.getAttribute("data-key")
+            let itemValue: string | number = item.value
+                .split(/[\s,\t,\n]+/)
+                .join(' ')
+                .trim();
+            if (itemKey !== 'itemId') {
+                itemValue = parseFloat((itemValue as string)?.replace(/^\D+/g, ''));
+            }
+            return {
+                "key": itemKey,
+                "value": td.textContent,
+                "icon": hasSprite ? hasSprite.getAttribute("style").match(/\bhttps?:\/\/\S+/gi)?.[0].substring(0, hasSprite.getAttribute("style").match(/\bhttps?:\/\/\S+/gi)?.[0].length - 2)
+     : hasIcon ? hasIcon.getAttribute("src") : null
+            }
+        })
+        return dataset
+    })
     return {
-        icon,
-        name,
-        level_required,
-        repcipe,
-        // price,
-        time,
-        xp_gain,
-        energy_use,
-        // return_value,
-        // eat_for_energy,
-        notes,
+        "label": capitalizeFirstLetter(table.getAttribute("data-prefix").replaceAll("skills-database-", "")),
+        "item": items
     }
 })
+console.log(item_arr)
 ```
